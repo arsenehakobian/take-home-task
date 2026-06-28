@@ -4,13 +4,18 @@ from typing import Any
 from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
-from app.models import Item, ItemCreate, User, UserCreate, UserUpdate
+from app.models import Item, ItemCreate, User, UserCreate, UserRole, UserUpdate
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
     db_obj = User.model_validate(
         user_create, update={"hashed_password": get_password_hash(user_create.password)}
     )
+    # Keep the admin role and the legacy is_superuser flag in sync: either
+    # signal promotes the user to admin.
+    if db_obj.is_superuser or db_obj.role == UserRole.ADMIN:
+        db_obj.is_superuser = True
+        db_obj.role = UserRole.ADMIN
     session.add(db_obj)
     session.commit()
     session.refresh(db_obj)
@@ -24,6 +29,15 @@ def update_user(*, session: Session, db_user: User, user_in: UserUpdate) -> Any:
         password = user_data["password"]
         hashed_password = get_password_hash(password)
         extra_data["hashed_password"] = hashed_password
+    # Keep role and is_superuser consistent. An explicit role is authoritative;
+    # otherwise an is_superuser change propagates to the role.
+    if "role" in user_data:
+        user_data["is_superuser"] = user_data["role"] == UserRole.ADMIN
+    elif "is_superuser" in user_data:
+        if user_data["is_superuser"]:
+            user_data["role"] = UserRole.ADMIN
+        elif db_user.role == UserRole.ADMIN:
+            user_data["role"] = UserRole.MEMBER
     db_user.sqlmodel_update(user_data, update=extra_data)
     session.add(db_user)
     session.commit()
