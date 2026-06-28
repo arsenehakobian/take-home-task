@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9092bfcd-f7b8-474e-bdbd-c08a92d572d9" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3FmSearWGbdWLEzvZi2p33pwsAW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "FastAPI.Run.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "bun",
+    "settings.editor.selected.configurable": "application.passwordSafe",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Run" type="Python.FastAPI">
+      <option name="file" value="$PROJECT_DIR$/backend/app/main.py" />
+      <module name="full-stack-fastapi-template" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="false" />
+      <envs>
+        <env name="BACKEND_CORS_ORIGINS" value="http://localhost,http://localhost:5173,https://localhost,https://localhost:5173,http://localhost.tiangolo.com" />
+        <env name="DOCKER_IMAGE_BACKEND" value="backend" />
+        <env name="DOCKER_IMAGE_FRONTEND" value="frontend" />
+        <env name="DOMAIN" value="localhost" />
+        <env name="EMAILS_FROM_EMAIL" value="info@example.com" />
+        <env name="ENVIRONMENT" value="local" />
+        <env name="FIRST_SUPERUSER" value="admin@example.com" />
+        <env name="FIRST_SUPERUSER_PASSWORD" value="changethis" />
+        <env name="FRONTEND_HOST" value="http://localhost:5173" />
+        <env name="POSTGRES_DB" value="app" />
+        <env name="POSTGRES_PASSWORD" value="changethis" />
+        <env name="POSTGRES_PORT" value="5432" />
+        <env name="POSTGRES_SERVER" value="localhost" />
+        <env name="POSTGRES_USER" value="postgres" />
+        <env name="PROJECT_NAME" value="Full Stack FastAPI Project" />
+        <env name="SECRET_KEY" value="changethis" />
+        <env name="SENTRY_DSN" value="" />
+        <env name="SMTP_HOST" value="" />
+        <env name="SMTP_PASSWORD" value="" />
+        <env name="SMTP_PORT" value="587" />
+        <env name="SMTP_SSL" value="False" />
+        <env name="SMTP_TLS" value="True" />
+        <env name="SMTP_USER" value="" />
+        <env name="STACK_NAME" value="full-stack-fastapi-project" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="RUN_TOOL" value="" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-PY-261.24374.152" />
+        <option value="bundled-python-sdk-c59985aa861c-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.24374.152" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9092bfcd-f7b8-474e-bdbd-c08a92d572d9" name="Changes" comment="" />
+      <created>1782678847320</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1782678847320</updated>
+      <workItem from="1782678848490" duration="1106000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/full_stack_fastapi_template$Run.coverage" NAME="Run Coverage Results" MODIFIED="1782679654809" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+  </component>
+</project>
