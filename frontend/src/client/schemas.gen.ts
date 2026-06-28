@@ -318,6 +318,10 @@ export const UserCreateSchema = {
             ],
             title: 'Full Name'
         },
+        role: {
+            '$ref': '#/components/schemas/UserRole',
+            default: 'member'
+        },
         password: {
             type: 'string',
             maxLength: 128,
@@ -328,6 +332,22 @@ export const UserCreateSchema = {
     type: 'object',
     required: ['email', 'password'],
     title: 'UserCreate'
+} as const;
+
+export const UserMetricsSchema = {
+    properties: {
+        total_users: {
+            type: 'integer',
+            title: 'Total Users'
+        },
+        active_users: {
+            type: 'integer',
+            title: 'Active Users'
+        }
+    },
+    type: 'object',
+    required: ['total_users', 'active_users'],
+    title: 'UserMetrics'
 } as const;
 
 export const UserPublicSchema = {
@@ -359,6 +379,10 @@ export const UserPublicSchema = {
                 }
             ],
             title: 'Full Name'
+        },
+        role: {
+            '$ref': '#/components/schemas/UserRole',
+            default: 'member'
         },
         id: {
             type: 'string',
@@ -413,6 +437,17 @@ export const UserRegisterSchema = {
     type: 'object',
     required: ['email', 'password'],
     title: 'UserRegister'
+} as const;
+
+export const UserRoleSchema = {
+    type: 'string',
+    enum: ['admin', 'manager', 'member'],
+    title: 'UserRole',
+    description: `Application role used for authorization checks.
+
+Stored as a plain VARCHAR (not a native DB enum) so new roles can be
+added without an Alembic migration. The \`admin\` role is kept in sync with
+the existing \`is_superuser\` flag.`
 } as const;
 
 export const UserUpdateSchema = {
@@ -476,6 +511,16 @@ export const UserUpdateSchema = {
                 }
             ],
             title: 'Password'
+        },
+        role: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/UserRole'
+                },
+                {
+                    type: 'null'
+                }
+            ]
         }
     },
     type: 'object',
