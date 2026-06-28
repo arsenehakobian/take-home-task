@@ -89,6 +89,12 @@ class UsersPublic(SQLModel):
     count: int
 
 
+# Read-only aggregate metrics, viewable by managers and admins
+class UserMetrics(SQLModel):
+    total_users: int
+    active_users: int
+
+
 # Shared properties
 class ItemBase(SQLModel):
     title: str = Field(min_length=1, max_length=255)
