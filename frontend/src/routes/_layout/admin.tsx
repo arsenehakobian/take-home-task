@@ -4,11 +4,11 @@ import { Suspense } from "react"
 
 import { type UserPublic, UsersService } from "@/client"
 import AddUser from "@/components/Admin/AddUser"
-import { columns, type UserTableData } from "@/components/Admin/columns"
+import { getColumns, type UserTableData } from "@/components/Admin/columns"
 import { DataTable } from "@/components/Common/DataTable"
 import PendingUsers from "@/components/Pending/PendingUsers"
 import useAuth from "@/hooks/useAuth"
-import { isAdmin } from "@/lib/roles"
+import { canViewUsers, isAdmin } from "@/lib/roles"
 
 function getUsersQueryOptions() {
   return {
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_layout/admin")({
   component: Admin,
   beforeLoad: async () => {
     const user = await UsersService.readUserMe()
-    if (!isAdmin(user)) {
+    if (!canViewUsers(user)) {
       throw redirect({
         to: "/",
       })
@@ -45,6 +45,8 @@ function UsersTableContent() {
     isCurrentUser: currentUser?.id === user.id,
   }))
 
+  const columns = getColumns(isAdmin(currentUser))
+
   return <DataTable columns={columns} data={tableData} />
 }
 
@@ -57,16 +59,21 @@ function UsersTable() {
 }
 
 function Admin() {
+  const { user: currentUser } = useAuth()
+  const canManage = isAdmin(currentUser)
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Users</h1>
           <p className="text-muted-foreground">
-            Manage user accounts and permissions
+            {canManage
+              ? "Manage user accounts and permissions"
+              : "View user accounts"}
           </p>
         </div>
-        <AddUser />
+        {canManage && <AddUser />}
       </div>
       <UsersTable />
     </div>

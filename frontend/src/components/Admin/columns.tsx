@@ -10,7 +10,17 @@ export type UserTableData = UserPublic & {
   isCurrentUser: boolean
 }
 
-export const columns: ColumnDef<UserTableData>[] = [
+const actionsColumn: ColumnDef<UserTableData> = {
+  id: "actions",
+  header: () => <span className="sr-only">Actions</span>,
+  cell: ({ row }) => (
+    <div className="flex justify-end">
+      <UserActionsMenu user={row.original} />
+    </div>
+  ),
+}
+
+const baseColumns: ColumnDef<UserTableData>[] = [
   {
     accessorKey: "full_name",
     header: "Full Name",
@@ -70,13 +80,10 @@ export const columns: ColumnDef<UserTableData>[] = [
       </div>
     ),
   },
-  {
-    id: "actions",
-    header: () => <span className="sr-only">Actions</span>,
-    cell: ({ row }) => (
-      <div className="flex justify-end">
-        <UserActionsMenu user={row.original} />
-      </div>
-    ),
-  },
 ]
+
+// Build the table columns. The actions column (edit/delete) is only included
+// for users who can manage others (admins).
+export function getColumns(canManage: boolean): ColumnDef<UserTableData>[] {
+  return canManage ? [...baseColumns, actionsColumn] : baseColumns
+}
