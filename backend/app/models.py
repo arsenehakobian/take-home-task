@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from enum import Enum
 
 from pydantic import EmailStr
-from sqlalchemy import DateTime, String
+from sqlalchemy import DateTime, String, types
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -24,6 +24,23 @@ class UserRole(str, Enum):
     MEMBER = "member"
 
 
+class UserRoleType(types.TypeDecorator):  # type: ignore[type-arg]
+    """Store UserRole as VARCHAR but load it back as a UserRole instance.
+
+    Keeps the column a plain string (so new roles need no migration) while
+    ensuring in-memory values are always the enum, not a bare str.
+    """
+
+    impl = String(20)
+    cache_ok = True
+
+    def process_bind_param(self, value: "UserRole | str | None", dialect: object) -> str | None:
+        return None if value is None else UserRole(value).value
+
+    def process_result_value(self, value: str | None, dialect: object) -> "UserRole | None":
+        return None if value is None else UserRole(value)
+
+
 # Shared properties
 class UserBase(SQLModel):
     email: EmailStr = Field(unique=True, index=True, max_length=255)
@@ -32,7 +49,7 @@ class UserBase(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
     role: UserRole = Field(
         default=UserRole.MEMBER,
-        sa_type=String(length=20),  # type: ignore
+        sa_type=UserRoleType,  # type: ignore
     )
 
 
