@@ -9,6 +9,7 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar"
 import useAuth from "@/hooks/useAuth"
+import { canViewUsers } from "@/lib/roles"
 import { type Item, Main } from "./Main"
 import { User } from "./User"
 
@@ -20,8 +21,8 @@ const baseItems: Item[] = [
 export function AppSidebar() {
   const { user: currentUser } = useAuth()
 
-  const items = currentUser?.is_superuser
-    ? [...baseItems, { icon: Users, title: "Admin", path: "/admin" }]
+  const items = canViewUsers(currentUser)
+    ? [...baseItems, { icon: Users, title: "Users", path: "/admin" }]
     : baseItems
 
   return (

@@ -67,7 +67,13 @@ export type UserCreate = {
     is_active?: boolean;
     is_superuser?: boolean;
     full_name?: (string | null);
+    role?: UserRole;
     password: string;
+};
+
+export type UserMetrics = {
+    total_users: number;
+    active_users: number;
 };
 
 export type UserPublic = {
@@ -75,6 +81,7 @@ export type UserPublic = {
     is_active?: boolean;
     is_superuser?: boolean;
     full_name?: (string | null);
+    role?: UserRole;
     id: string;
     created_at?: (string | null);
 };
@@ -84,6 +91,15 @@ export type UserRegister = {
     password: string;
     full_name?: (string | null);
 };
+
+/**
+ * Application role used for authorization checks.
+ *
+ * Stored as a plain VARCHAR (not a native DB enum) so new roles can be
+ * added without an Alembic migration. The `admin` role is kept in sync with
+ * the existing `is_superuser` flag.
+ */
+export type UserRole = 'admin' | 'manager' | 'member';
 
 export type UsersPublic = {
     data: Array<UserPublic>;
@@ -96,6 +112,7 @@ export type UserUpdate = {
     is_superuser?: (boolean | null);
     full_name?: (string | null);
     password?: (string | null);
+    role?: (UserRole | null);
 };
 
 export type UserUpdateMe = {
@@ -236,5 +253,7 @@ export type UtilsTestEmailData = {
 };
 
 export type UtilsTestEmailResponse = (Message);
+
+export type UtilsReadMetricsResponse = (UserMetrics);
 
 export type UtilsHealthCheckResponse = (boolean);

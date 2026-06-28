@@ -1,13 +1,44 @@
 import uuid
 from datetime import UTC, datetime
+from enum import Enum
 
 from pydantic import EmailStr
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, String, types
 from sqlmodel import Field, Relationship, SQLModel
 
 
 def get_datetime_utc() -> datetime:
     return datetime.now(UTC)
+
+
+class UserRole(str, Enum):
+    """Application role used for authorization checks.
+
+    Stored as a plain VARCHAR (not a native DB enum) so new roles can be
+    added without an Alembic migration. The `admin` role is kept in sync with
+    the existing `is_superuser` flag.
+    """
+
+    ADMIN = "admin"
+    MANAGER = "manager"
+    MEMBER = "member"
+
+
+class UserRoleType(types.TypeDecorator):  # type: ignore[type-arg]
+    """Store UserRole as VARCHAR but load it back as a UserRole instance.
+
+    Keeps the column a plain string (so new roles need no migration) while
+    ensuring in-memory values are always the enum, not a bare str.
+    """
+
+    impl = String(20)
+    cache_ok = True
+
+    def process_bind_param(self, value: "UserRole | str | None", dialect: object) -> str | None:
+        return None if value is None else UserRole(value).value
+
+    def process_result_value(self, value: str | None, dialect: object) -> "UserRole | None":
+        return None if value is None else UserRole(value)
 
 
 # Shared properties
@@ -16,6 +47,10 @@ class UserBase(SQLModel):
     is_active: bool = True
     is_superuser: bool = False
     full_name: str | None = Field(default=None, max_length=255)
+    role: UserRole = Field(
+        default=UserRole.MEMBER,
+        sa_type=UserRoleType,  # type: ignore
+    )
 
 
 # Properties to receive via API on creation
@@ -36,6 +71,7 @@ class UserUpdate(SQLModel):
     is_superuser: bool | None = None
     full_name: str | None = Field(default=None, max_length=255)
     password: str | None = Field(default=None, min_length=8, max_length=128)
+    role: UserRole | None = None
 
 
 class UserUpdateMe(SQLModel):
@@ -68,6 +104,12 @@ class UserPublic(UserBase):
 class UsersPublic(SQLModel):
     data: list[UserPublic]
     count: int
+
+
+# Read-only aggregate metrics, viewable by managers and admins
+class UserMetrics(SQLModel):
+    total_users: int
+    active_users: int
 
 
 # Shared properties

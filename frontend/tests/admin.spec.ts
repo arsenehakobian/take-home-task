@@ -42,7 +42,7 @@ test.describe("Admin user management", () => {
     await expect(userRow).toBeVisible()
   })
 
-  test("Create a superuser", async ({ page }) => {
+  test("Create an admin user", async ({ page }) => {
     await page.goto("/admin")
 
     const email = randomEmail()
@@ -53,7 +53,8 @@ test.describe("Admin user management", () => {
     await page.getByPlaceholder("Email").fill(email)
     await page.getByPlaceholder("Password").first().fill(password)
     await page.getByPlaceholder("Password").last().fill(password)
-    await page.getByLabel("Is superuser?").check()
+    await page.getByRole("combobox").click()
+    await page.getByRole("option", { name: "Admin" }).click()
     await page.getByLabel("Is active?").check()
 
     await page.getByRole("button", { name: "Save" }).click()
@@ -63,7 +64,37 @@ test.describe("Admin user management", () => {
     await expect(page.getByRole("dialog")).not.toBeVisible()
 
     const userRow = page.getByRole("row").filter({ hasText: email })
-    await expect(userRow.getByText("Superuser")).toBeVisible()
+    await expect(userRow.getByText("Admin")).toBeVisible()
+  })
+
+  test("Assign the manager role when editing a user", async ({ page }) => {
+    await page.goto("/admin")
+
+    const email = randomEmail()
+    const password = randomPassword()
+
+    await page.getByRole("button", { name: "Add User" }).click()
+    await page.getByPlaceholder("Email").fill(email)
+    await page.getByPlaceholder("Password").first().fill(password)
+    await page.getByPlaceholder("Password").last().fill(password)
+    await page.getByRole("button", { name: "Save" }).click()
+
+    await expect(page.getByText("User created successfully")).toBeVisible()
+    await expect(page.getByRole("dialog")).not.toBeVisible()
+
+    const userRow = page.getByRole("row").filter({ hasText: email })
+    // New users default to Member.
+    await expect(userRow.getByText("Member")).toBeVisible()
+
+    await userRow.getByRole("button").click()
+    await page.getByRole("menuitem", { name: "Edit User" }).click()
+
+    await page.getByRole("combobox").click()
+    await page.getByRole("option", { name: "Manager" }).click()
+    await page.getByRole("button", { name: "Save" }).click()
+
+    await expect(page.getByText("User updated successfully")).toBeVisible()
+    await expect(userRow.getByText("Manager")).toBeVisible()
   })
 
   test("Edit a user successfully", async ({ page }) => {

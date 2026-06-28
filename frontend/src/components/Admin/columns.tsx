@@ -2,6 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 
 import type { UserPublic } from "@/client"
 import { Badge } from "@/components/ui/badge"
+import { ROLE_LABELS } from "@/lib/roles"
 import { cn } from "@/lib/utils"
 import { UserActionsMenu } from "./UserActionsMenu"
 
@@ -9,7 +10,17 @@ export type UserTableData = UserPublic & {
   isCurrentUser: boolean
 }
 
-export const columns: ColumnDef<UserTableData>[] = [
+const actionsColumn: ColumnDef<UserTableData> = {
+  id: "actions",
+  header: () => <span className="sr-only">Actions</span>,
+  cell: ({ row }) => (
+    <div className="flex justify-end">
+      <UserActionsMenu user={row.original} />
+    </div>
+  ),
+}
+
+const baseColumns: ColumnDef<UserTableData>[] = [
   {
     accessorKey: "full_name",
     header: "Full Name",
@@ -39,13 +50,18 @@ export const columns: ColumnDef<UserTableData>[] = [
     ),
   },
   {
-    accessorKey: "is_superuser",
+    accessorKey: "role",
     header: "Role",
-    cell: ({ row }) => (
-      <Badge variant={row.original.is_superuser ? "default" : "secondary"}>
-        {row.original.is_superuser ? "Superuser" : "User"}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const role = row.original.role ?? "member"
+      const variant =
+        role === "admin"
+          ? "default"
+          : role === "manager"
+            ? "secondary"
+            : "outline"
+      return <Badge variant={variant}>{ROLE_LABELS[role]}</Badge>
+    },
   },
   {
     accessorKey: "is_active",
@@ -64,13 +80,10 @@ export const columns: ColumnDef<UserTableData>[] = [
       </div>
     ),
   },
-  {
-    id: "actions",
-    header: () => <span className="sr-only">Actions</span>,
-    cell: ({ row }) => (
-      <div className="flex justify-end">
-        <UserActionsMenu user={row.original} />
-      </div>
-    ),
-  },
 ]
+
+// Build the table columns. The actions column (edit/delete) is only included
+// for users who can manage others (admins).
+export function getColumns(canManage: boolean): ColumnDef<UserTableData>[] {
+  return canManage ? [...baseColumns, actionsColumn] : baseColumns
+}
